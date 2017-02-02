@@ -1,5 +1,5 @@
 #preparing for work
-yum install -y mlocate
+yum install -y mlocate >> /dev/null
 updatedb
 
 #fix httpd.confvhost.conf
@@ -16,20 +16,24 @@ updatedb
 #fix java
    alternatives --set java /opt/oracle/java/x64//jdk1.7.0_79/bin/java
 
-#set permissions
-   chown -R tomcat:tomcat /opt/apache/tomcat/7.0.62/logs
-   chown -R tomcat:tomcat /opt/apache/tomcat/7.0.62/logs/*
-
-#auto
-   chkconfig tomcat on
+#fix  Tomcat auto
+sed -ie '/export/d' /home/tomcat/.bashrc
+export JAVA_HOME=/opt/oracle/java/x64/jdk1.7.0_79/jre
+export CATALINA_HOME=/opt/apache/tomcat/7.0.62
+chkconfig tomcat on
 
 #restart services
    service httpd restart
    /opt/apache/tomcat/7.0.62/bin/shutdown.sh 
    /opt/apache/tomcat/7.0.62/bin/startup.sh 
 
+#set permissions
+   chown -R tomcat:tomcat /opt/apache/tomcat/7.0.62/logs/
+   chown -R tomcat:tomcat /opt/apache/tomcat/7.0.62/logs/*
+
 #fix iptables
    iptables -I INPUT -p tcp --dport 22 -m state --state NEW -j ACCEPT
+   iptables -I INPUT -p tcp --dport 2222 -m state --state NEW -j ACCEPT
    iptables -I INPUT -p tcp --dport 80 -m state --state NEW -j ACCEPT
    chattr -i /etc/sysconfig/iptables
    service iptables save
