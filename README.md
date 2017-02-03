@@ -35,7 +35,7 @@
 ####CATALINA_HOME - the environment variable.Must point to a directory with installed Tomcat
 
 ##What users run httpd and tomcat processes? How is it configured?
-
+####For Tomcat process - user tomcat,for httpd - user apache.
 
 ##What configuration files are used to make components work with each other?
 ####Config files such as vhost.conf,httpd.conf,worker.properties.
